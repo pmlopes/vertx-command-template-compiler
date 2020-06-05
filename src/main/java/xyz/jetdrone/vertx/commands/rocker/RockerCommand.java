@@ -69,9 +69,8 @@ public class RockerCommand extends DefaultCommand {
     this.extendsModelClass = extendsModelClass;
   }
 
-  @Option(longName = "discardLogicWhitespace", flag = true)
+  @Option(longName = "discardLogicWhitespace", shortName = "ws", flag = true)
   @Description("Discard logic white space (default: false).")
-  @DefaultValue("false")
   public void setDiscardLogicWhitespace(boolean discardLogicWhitespace) {
     this.discardLogicWhitespace = discardLogicWhitespace;
   }
@@ -83,9 +82,8 @@ public class RockerCommand extends DefaultCommand {
     this.targetCharset = targetCharset;
   }
 
-  @Option(longName = "optimize", flag = true)
+  @Option(longName = "optimize", shortName = "O", flag = true)
   @Description("Optimize (default: false).")
-  @DefaultValue("false")
   public void setOptimize(boolean optimize) {
     this.optimize = optimize;
   }
@@ -176,25 +174,21 @@ public class RockerCommand extends DefaultCommand {
       fatal("Caught " + errors + " errors.");
     }
 
-    if (!configuration.getOptions().getOptimize()) {
-      // save configuration
-      if (!configuration.getClassDirectory().exists()) {
-        if (!configuration.getClassDirectory().mkdirs()) {
-          warn("Failed to mkdir: " + configuration.getClassDirectory());
-        }
+    // save configuration
+    if (!configuration.getClassDirectory().exists()) {
+      if (!configuration.getClassDirectory().mkdirs()) {
+        warn("Failed to mkdir: " + configuration.getClassDirectory());
       }
+    }
 
-      // use resource name, but strip leading slash
-      // place it into the classes directory (not the compile directory)
-      try{
-        File configFile = new File(configuration.getClassDirectory(), RockerRuntime.CONF_RESOURCE_NAME.substring(1));
-        configuration.write(configFile);
-        warn("Generated rocker configuration " + configFile);
-      }catch(IOException iox){
-        fatal(iox.getMessage());
-      }
-    } else {
-      warn("Optimize flag on. Did not generate rocker configuration file");
+    // use resource name, but strip leading slash
+    // place it into the classes directory (not the compile directory)
+    try {
+      File configFile = new File(configuration.getClassDirectory(), RockerRuntime.CONF_RESOURCE_NAME.substring(1));
+      configuration.write(configFile);
+      warn("Generated rocker configuration " + configFile);
+    } catch (IOException iox) {
+      fatal(iox.getMessage());
     }
 
     // save the generated file list
