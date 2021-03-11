@@ -1,1 +1,2 @@
 xyz.jetdrone.vertx.commands.rocker.RockerCommandFactory
+xyz.jetdrone.vertx.commands.jte.JteCommandFactory
