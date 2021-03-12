@@ -22,7 +22,6 @@ public class RockerCommand extends DefaultCommand {
 
   private String templateDirectory;
   private String outputDirectory;
-  private boolean failOnError;
   private String suffixRegex;
   private String extendsClass;
   private String extendsModelClass;
@@ -41,13 +40,6 @@ public class RockerCommand extends DefaultCommand {
   @DefaultValue("out")
   public void setOutputDirectory(String outputDirectory) {
     this.outputDirectory = outputDirectory;
-  }
-
-  @Option(longName = "failOnError", flag = true)
-  @Description("Fail on error.")
-  @DefaultValue("true")
-  public void setFailOnError(boolean failOnError) {
-    this.failOnError = failOnError;
   }
 
   @Option(longName = "suffixRegex")
@@ -170,7 +162,7 @@ public class RockerCommand extends DefaultCommand {
 
     warn("Generated " + generated + " rocker java source files");
 
-    if (errors > 0 && failOnError) {
+    if (errors > 0) {
       fatal("Caught " + errors + " errors.");
     }
 
