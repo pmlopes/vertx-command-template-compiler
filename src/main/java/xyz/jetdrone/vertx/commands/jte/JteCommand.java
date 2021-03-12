@@ -1,6 +1,5 @@
 package xyz.jetdrone.vertx.commands.jte;
 
-import gg.jte.CodeResolver;
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
 import gg.jte.resolve.DirectoryCodeResolver;
@@ -28,6 +27,7 @@ public class JteCommand extends DefaultCommand {
   public String[] htmlTags;
   public String[] htmlAttributes;
   public boolean htmlCommentsPreserved;
+  public boolean binaryStaticContent;
 
   @Argument(index = 0, argName = "templateDirectory")
   @Description("Directory containing templates.")
@@ -73,6 +73,12 @@ public class JteCommand extends DefaultCommand {
     this.htmlCommentsPreserved = htmlCommentsPreserved;
   }
 
+  @Option(longName = "binaryStaticContent", shortName = "B", flag = true)
+  @Description("Experimental setting, that UTF-8 encodes all static template parts. (default: false).")
+  public void setBinaryStaticContent(boolean binaryStaticContent) {
+    this.binaryStaticContent = binaryStaticContent;
+  }
+
   @Override
   public void run() throws CLIException {
 
@@ -88,6 +94,7 @@ public class JteCommand extends DefaultCommand {
     templateEngine.setHtmlTags(htmlTags);
     templateEngine.setHtmlAttributes(htmlAttributes);
     templateEngine.setHtmlCommentsPreserved(htmlCommentsPreserved);
+    templateEngine.setBinaryStaticContent(binaryStaticContent);
 
     List<String> generated;
 
@@ -107,7 +114,7 @@ public class JteCommand extends DefaultCommand {
     // save the generated file list
     try (PrintWriter out = new PrintWriter(new File(getCwd(), outputDirectory + File.separator + "templates.lst"))) {
       for (String file : generated) {
-        out.println(file);
+        out.println(new File(outputDirectory, file));
       }
     } catch (IOException iox) {
       fatal(iox.getMessage());
